@@ -28,6 +28,8 @@ NEXT_PUBLIC_REPOSITORY_URL=https://github.com/your-account/your-repository
 NEXT_PUBLIC_FEEDBACK_URL=https://github.com/your-account/your-repository/issues/new
 ```
 
+The interface follows the browser's preferred language when it is Chinese or English. `NEXT_PUBLIC_DEFAULT_LOCALE` is the fallback when neither language is preferred or no language preference is sent; it defaults to English.
+
 Optional integrations are disabled unless you configure them:
 
 ```dotenv

@@ -4,9 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type Href } from "@/components/LinkButton";
 import Typography from "@/components/ui/typography";
-import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ReferProps {
   disableHeading?: boolean;
@@ -14,9 +13,10 @@ interface ReferProps {
 
 export default function Refer({ disableHeading }: ReferProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const currentPath = usePathname();
 
-  const items = siteConfig.defaultLocale === "zh"
+  const items = locale === "zh"
     ? [
         { title: "如何进行 JSON 格式化？", href: "/tutorial/format" },
         { title: "如何进行 JSON 压缩/最小化？", href: "/tutorial/minify" },

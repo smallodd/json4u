@@ -1,10 +1,12 @@
+import { selectLocale } from "@/i18n/locale";
 import { siteConfig } from "@/lib/site-config";
+import { headers } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
 
 export const locales = ["en", "zh"];
 
 export default getRequestConfig(async () => {
-  const locale = siteConfig.defaultLocale;
+  const locale = selectLocale(headers().get("accept-language"), siteConfig.defaultLocale);
 
   return {
     locale,
