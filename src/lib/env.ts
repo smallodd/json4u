@@ -6,10 +6,13 @@ export const version = packageJSON.version;
 export const majorVersion = packageJSON.version.split(".").slice(0, 2).join(".");
 
 // https://env.t3.gg/docs/nextjs
+const configured = (value: string | undefined) => value?.trim() || undefined;
+const vercelEnvironment = configured(process.env.NEXT_PUBLIC_VERCEL_ENV) ?? configured(process.env.VERCEL_ENV);
 const vercelHost =
-  process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
-    ? process.env.NEXT_PUBLIC_VERCEL_URL
-    : process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
+  vercelEnvironment === "preview"
+    ? configured(process.env.NEXT_PUBLIC_VERCEL_URL) ?? configured(process.env.VERCEL_URL)
+    : configured(process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) ??
+      configured(process.env.VERCEL_PROJECT_PRODUCTION_URL);
 
 export const env = createEnv({
   server: {},
@@ -28,18 +31,18 @@ export const env = createEnv({
     NEXT_PUBLIC_FILE_NAME_PREFIX: z.string().min(1).default("json-editor"),
   },
   experimental__runtimeEnv: {
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? (vercelHost ? `https://${vercelHost}` : undefined),
-    NEXT_PUBLIC_SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME,
-    NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
-    NEXT_PUBLIC_REPOSITORY_URL: process.env.NEXT_PUBLIC_REPOSITORY_URL,
-    NEXT_PUBLIC_FEEDBACK_URL: process.env.NEXT_PUBLIC_FEEDBACK_URL,
-    NEXT_PUBLIC_SOCIAL_X_URL: process.env.NEXT_PUBLIC_SOCIAL_X_URL,
-    NEXT_PUBLIC_SOCIAL_WEIBO_URL: process.env.NEXT_PUBLIC_SOCIAL_WEIBO_URL,
-    NEXT_PUBLIC_REVIEW_URL: process.env.NEXT_PUBLIC_REVIEW_URL,
-    NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
-    NEXT_PUBLIC_ADSENSE_CLIENT: process.env.NEXT_PUBLIC_ADSENSE_CLIENT,
-    NEXT_PUBLIC_MONACO_VS_URL: process.env.NEXT_PUBLIC_MONACO_VS_URL,
-    NEXT_PUBLIC_FILE_NAME_PREFIX: process.env.NEXT_PUBLIC_FILE_NAME_PREFIX,
+    NEXT_PUBLIC_SITE_URL: configured(process.env.NEXT_PUBLIC_SITE_URL) ?? (vercelHost ? `https://${vercelHost}` : undefined),
+    NEXT_PUBLIC_SITE_NAME: configured(process.env.NEXT_PUBLIC_SITE_NAME),
+    NEXT_PUBLIC_DEFAULT_LOCALE: configured(process.env.NEXT_PUBLIC_DEFAULT_LOCALE),
+    NEXT_PUBLIC_REPOSITORY_URL: configured(process.env.NEXT_PUBLIC_REPOSITORY_URL),
+    NEXT_PUBLIC_FEEDBACK_URL: configured(process.env.NEXT_PUBLIC_FEEDBACK_URL),
+    NEXT_PUBLIC_SOCIAL_X_URL: configured(process.env.NEXT_PUBLIC_SOCIAL_X_URL),
+    NEXT_PUBLIC_SOCIAL_WEIBO_URL: configured(process.env.NEXT_PUBLIC_SOCIAL_WEIBO_URL),
+    NEXT_PUBLIC_REVIEW_URL: configured(process.env.NEXT_PUBLIC_REVIEW_URL),
+    NEXT_PUBLIC_GA_ID: configured(process.env.NEXT_PUBLIC_GA_ID),
+    NEXT_PUBLIC_ADSENSE_CLIENT: configured(process.env.NEXT_PUBLIC_ADSENSE_CLIENT),
+    NEXT_PUBLIC_MONACO_VS_URL: configured(process.env.NEXT_PUBLIC_MONACO_VS_URL),
+    NEXT_PUBLIC_FILE_NAME_PREFIX: configured(process.env.NEXT_PUBLIC_FILE_NAME_PREFIX),
   },
 });
 
