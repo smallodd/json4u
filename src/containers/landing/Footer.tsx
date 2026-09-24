@@ -4,23 +4,17 @@ import GitHub from "@/components/icons/GitHub";
 import Logo from "@/components/icons/Logo";
 import Twitter from "@/components/icons/Twitter";
 import Weibo from "@/components/icons/Weibo";
-import { isCN } from "@/lib/env";
+import { siteConfig } from "@/lib/site-config";
 import { useTranslations } from "next-intl";
 
 export default function Footer() {
   const t = useTranslations("Home");
   const items: FooterLinkProps[] = [
-    { href: "https://www.trustpilot.com/review/json4u.com", title: t("Give a rating") },
-    ...(isCN
-      ? [
-          { href: "https://support.qq.com/product/670462", title: t("Feedback") },
-          { href: "https://weibo.com/loggerhead", title: <Weibo className="icon" /> },
-        ]
-      : [
-          { href: "https://github.com/loggerhead/json4u/issues/new", title: t("Feedback") },
-          { href: "https://x.com/1oggerhead", title: <Twitter className="icon" /> },
-        ]),
-    { href: "https://github.com/loggerhead/json4u", title: <GitHub className="icon" /> },
+    ...(siteConfig.reviewUrl ? [{ href: siteConfig.reviewUrl, title: t("Give a rating") }] : []),
+    ...(siteConfig.feedbackUrl ? [{ href: siteConfig.feedbackUrl, title: t("Feedback") }] : []),
+    ...(siteConfig.socialWeiboUrl ? [{ href: siteConfig.socialWeiboUrl, title: <Weibo className="icon" /> }] : []),
+    ...(siteConfig.socialXUrl ? [{ href: siteConfig.socialXUrl, title: <Twitter className="icon" /> }] : []),
+    ...(siteConfig.repositoryUrl ? [{ href: siteConfig.repositoryUrl, title: <GitHub className="icon" /> }] : []),
   ];
 
   return (
@@ -28,8 +22,15 @@ export default function Footer() {
       <div className="flex flex-col sm:flex-row items-center w-full max-w-page-header sm:px-8 px-4 gap-y-3 sm:gap-x-8 text-xs text-slate-500">
         <div className="flex items-center gap-2 shrink-0">
           <Logo className="w-[20px] h-[20px] text-slate-500" />
-          <span className="whitespace-nowrap">{`© ${new Date().getFullYear()} JSON For You`}</span>
+          <span className="whitespace-nowrap">{`© ${new Date().getFullYear()} ${siteConfig.name}`}</span>
         </div>
+        <span className="text-center">
+          {"Based on "}
+          <Link href="https://github.com/loggerhead/json4u" target="_blank" rel="noopener" className="hover:text-slate-900">
+            {"JSON For You"}
+          </Link>
+          {" by loggerhead"}
+        </span>
         <div className="flex items-center gap-4 sm:gap-8 sm:ml-0">
           <Legal />
         </div>
@@ -48,14 +49,8 @@ function Legal() {
 
   return (
     <div className="flex items-center lg:gap-8 lg:ml-0 ml-auto gap-4">
-      {isCN ? (
-        <FooterLink nofollow href="https://beian.miit.gov.cn" title={"粤ICP备16007488号"} />
-      ) : (
-        <>
-          <FooterLink href="/terms" title={t("Terms")} />
-          <FooterLink href="/privacy" title={t("Privacy")} />
-        </>
-      )}
+      <FooterLink href="/terms" title={t("Terms")} />
+      <FooterLink href="/privacy" title={t("Privacy")} />
     </div>
   );
 }

@@ -18,7 +18,8 @@ export async function urlToJSON(text: string): Promise<{ text: string; parse: bo
 
 export function urlToMap(s: string, maxLevel?: number): Map<string, string | Map<string, any>> {
   const isFullURI = isURI(s);
-  const u = new URL(isFullURI ? s : `http://json4u.com/${s.replace(/^\//, "")}`);
+  const baseUrl = typeof self === "undefined" ? "http://localhost" : self.location.origin;
+  const u = new URL(isFullURI ? s : `${baseUrl}/${s.replace(/^\//, "")}`);
   const m = new Map();
 
   if (isFullURI) {

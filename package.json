@@ -5,6 +5,9 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "assets": "node scripts/copy-monaco-assets.mjs",
+    "predev": "pnpm assets",
+    "prebuild": "pnpm assets",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

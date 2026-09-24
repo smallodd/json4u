@@ -6,16 +6,42 @@ export const version = packageJSON.version;
 export const majorVersion = packageJSON.version.split(".").slice(0, 2).join(".");
 
 // https://env.t3.gg/docs/nextjs
+const vercelHost =
+  process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
+    ? process.env.NEXT_PUBLIC_VERCEL_URL
+    : process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
+
 export const env = createEnv({
   server: {},
   client: {
-    NEXT_PUBLIC_APP_URL: z.string().regex(/https?:\/\/(\w+\.)+\w+(:\d+)?/g),
+    NEXT_PUBLIC_SITE_URL: z.string().url().default("http://localhost:3000"),
+    NEXT_PUBLIC_SITE_NAME: z.string().min(1).default("JSON Editor"),
+    NEXT_PUBLIC_DEFAULT_LOCALE: z.enum(["en", "zh"]).default("en"),
+    NEXT_PUBLIC_REPOSITORY_URL: z.string().url().optional(),
+    NEXT_PUBLIC_FEEDBACK_URL: z.string().url().optional(),
+    NEXT_PUBLIC_SOCIAL_X_URL: z.string().url().optional(),
+    NEXT_PUBLIC_SOCIAL_WEIBO_URL: z.string().url().optional(),
+    NEXT_PUBLIC_REVIEW_URL: z.string().url().optional(),
+    NEXT_PUBLIC_GA_ID: z.string().min(1).optional(),
+    NEXT_PUBLIC_ADSENSE_CLIENT: z.string().regex(/^ca-pub-\d+$/).optional(),
+    NEXT_PUBLIC_MONACO_VS_URL: z.string().min(1).default("/monaco/vs"),
+    NEXT_PUBLIC_FILE_NAME_PREFIX: z.string().min(1).default("json-editor"),
   },
   experimental__runtimeEnv: {
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? (vercelHost ? `https://${vercelHost}` : undefined),
+    NEXT_PUBLIC_SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME,
+    NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
+    NEXT_PUBLIC_REPOSITORY_URL: process.env.NEXT_PUBLIC_REPOSITORY_URL,
+    NEXT_PUBLIC_FEEDBACK_URL: process.env.NEXT_PUBLIC_FEEDBACK_URL,
+    NEXT_PUBLIC_SOCIAL_X_URL: process.env.NEXT_PUBLIC_SOCIAL_X_URL,
+    NEXT_PUBLIC_SOCIAL_WEIBO_URL: process.env.NEXT_PUBLIC_SOCIAL_WEIBO_URL,
+    NEXT_PUBLIC_REVIEW_URL: process.env.NEXT_PUBLIC_REVIEW_URL,
+    NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
+    NEXT_PUBLIC_ADSENSE_CLIENT: process.env.NEXT_PUBLIC_ADSENSE_CLIENT,
+    NEXT_PUBLIC_MONACO_VS_URL: process.env.NEXT_PUBLIC_MONACO_VS_URL,
+    NEXT_PUBLIC_FILE_NAME_PREFIX: process.env.NEXT_PUBLIC_FILE_NAME_PREFIX,
   },
 });
 
-// Is the .cn domain?
-export const isCN = /\.cn(:3000)?$/.test(env.NEXT_PUBLIC_APP_URL);
 export const isDev = process.env.NODE_ENV === "development";
+export const isPreview = process.env.VERCEL_ENV === "preview";

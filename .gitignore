@@ -26,6 +26,7 @@ auto-imports.d.ts
 # next.js
 /.next/
 /out/
+/public/monaco/
 
 # production
 /build

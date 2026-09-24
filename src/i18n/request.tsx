@@ -1,10 +1,10 @@
-import { isCN } from "@/lib/env";
+import { siteConfig } from "@/lib/site-config";
 import { getRequestConfig } from "next-intl/server";
 
 export const locales = ["en", "zh"];
 
 export default getRequestConfig(async () => {
-  const locale = isCN ? "zh" : "en";
+  const locale = siteConfig.defaultLocale;
 
   return {
     locale,

@@ -17,11 +17,12 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ARG APP_URL=http://localhost.json4u.cn:3000
+ARG SITE_URL=http://localhost:3000
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_APP_URL=$APP_URL
+ENV NEXT_PUBLIC_SITE_URL=$SITE_URL
+ENV BUILD_OUTPUT_STANDALONE=true
 
 RUN corepack enable pnpm && pnpm run build
 

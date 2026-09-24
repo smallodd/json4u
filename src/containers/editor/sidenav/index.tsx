@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Logo from "@/components/icons/Logo";
 import { Separator } from "@/components/ui/separator";
-import { isCN, version } from "@/lib/env";
+import { version } from "@/lib/env";
+import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import { useConfigFromCookies } from "@/stores/hook";
 import { useStatusStore } from "@/stores/statusStore";
@@ -14,7 +15,6 @@ import {
   Download,
   FileUp,
   CircleHelp,
-  Share2,
   SquareStack,
   AlignHorizontalJustifyCenter,
   ArrowLeftToLine,
@@ -29,7 +29,6 @@ import { Label } from "./IconLabel";
 import ImportPopover from "./ImportPopover";
 import LinkButton from "./LinkButton";
 import PopoverBtn, { popoverBtnClass } from "./PopoverButton";
-import SharePopover from "./SharePopover";
 import Toggle from "./Toggle";
 
 export default function SideNav() {
@@ -94,12 +93,6 @@ export default function SideNav() {
           </Link>
           <PopoverBtn title={t("Import")} icon={<FileUp className="icon" />} content={<ImportPopover />} />
           <PopoverBtn title={t("Export")} icon={<Download className="icon" />} content={<ExportPopover />} />
-          <PopoverBtn
-            className="hidden"
-            title={t("Share")}
-            icon={<Share2 className="icon" />}
-            content={<SharePopover />}
-          />
           <Separator className="my-1" />
           <Toggle
             icon={<Braces className="icon" />}
@@ -132,12 +125,9 @@ export default function SideNav() {
         </ul>
         <ul className="flex flex-col px-1 gap-y-2">
           <LinkButton icon={<CircleHelp className="icon" />} title={t("Tutorial")} href={"/tutorial"} newWindow />
-          <LinkButton
-            icon={<Bug className="icon" />}
-            title={t("Feedback")}
-            href={isCN ? "https://support.qq.com/product/670462" : "https://github.com/loggerhead/json4u/issues/new"}
-            newWindow
-          />
+          {siteConfig.feedbackUrl && (
+            <LinkButton icon={<Bug className="icon" />} title={t("Feedback")} href={siteConfig.feedbackUrl} newWindow />
+          )}
           <Button
             className="my-1.5"
             icon={fixSideNav ? <ArrowRightFromLine className="icon" /> : <ArrowLeftToLine className="icon" />}

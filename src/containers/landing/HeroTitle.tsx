@@ -2,7 +2,6 @@ import Background from "@/components/Background";
 import LinkButton from "@/components/LinkButton";
 import Section from "@/components/Section";
 import Typography from "@/components/ui/typography";
-import { isCN } from "@/lib/env";
 import { useTranslations } from "next-intl";
 
 export default function Title() {
@@ -28,15 +27,12 @@ export default function Title() {
         <LinkButton className="mb-6 h-10" size="lg" variant="default" href="/editor">
           <Typography variant="h5">{t("try_now")}</Typography>
         </LinkButton>
-        <video
+        <img
           width="1280"
           height="720"
           className="mt-8 rounded-md shadow-2xl border sm:mt-12 block"
-          src={isCN ? "https://o.json4u.cn/json4u.mp4" : "https://o.json4u.com/json4u.mp4"}
-          poster="/example/json4u.webp"
-          autoPlay
-          loop
-          muted
+          src="/example/json4u.webp"
+          alt="JSON editor preview"
         />
       </div>
       <Background variant="dots" size={20} />

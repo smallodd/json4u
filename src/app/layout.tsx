@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { env } from "@/lib/env";
+import { isPreview } from "@/lib/env";
+import { siteConfig } from "@/lib/site-config";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
@@ -11,19 +12,13 @@ export async function generateMetadata() {
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
-    alternates: {
-      canonical: "/",
-      languages: {
-        en: "https://json4u.com",
-        zh: "https://json4u.cn",
-        "x-default": "https://json4u.com",
-      },
-    },
-    applicationName: t("name"),
+    metadataBase: new URL(siteConfig.url),
+    alternates: isPreview ? undefined : { canonical: "/" },
+    robots: isPreview ? { index: false, follow: false } : undefined,
+    applicationName: siteConfig.name,
     title: {
-      default: t("title"),
-      template: `%s | ${t("title")}`,
+      default: siteConfig.name,
+      template: `%s | ${siteConfig.name}`,
     },
     keywords: t("keywords"),
     description: t("description"),
@@ -37,18 +32,16 @@ export async function generateMetadata() {
     },
     openGraph: {
       type: "website",
-      siteName: t("name"),
-      title: t("title"),
+      siteName: siteConfig.name,
+      title: siteConfig.name,
       description: t("description"),
-      authors: ["loggerhead"],
-      images: [{ url: `${env.NEXT_PUBLIC_APP_URL}/apple-icon.png`, width: 512, height: 512, alt: t("name") }],
+      images: [{ url: `${siteConfig.url}/apple-icon.png`, width: 512, height: 512, alt: siteConfig.name }],
     },
     twitter: {
       card: "summary",
-      title: t("title"),
+      title: siteConfig.name,
       description: t("description"),
-      creator: "@1oggerhead",
-      images: [`${env.NEXT_PUBLIC_APP_URL}/apple-icon.png`],
+      images: [`${siteConfig.url}/apple-icon.png`],
     },
   };
 }
@@ -60,11 +53,13 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6579013241267492"
-          crossOrigin="anonymous"
-        ></script>
+        {siteConfig.adsenseClient && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${siteConfig.adsenseClient}`}
+            crossOrigin="anonymous"
+          ></script>
+        )}
       </head>
       <body>
         {/* TODO: support dark theme */}
@@ -73,7 +68,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
         </ThemeProvider>
         <Toaster richColors position="bottom-right" />
       </body>
-      <GoogleAnalytics gaId="G-TLYE3CBLPW" />
+      {siteConfig.googleAnalyticsId && <GoogleAnalytics gaId={siteConfig.googleAnalyticsId} />}
     </html>
   );
 }

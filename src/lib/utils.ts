@@ -3,6 +3,7 @@ import { type ClassValue, clsx } from "clsx";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import { isDev } from "./env";
+import { siteConfig } from "./site-config";
 
 export function tryCatch<T>(fn: () => T, fallback: T): T {
   try {
@@ -102,7 +103,7 @@ function genDownloadFileName(suffix: string) {
   const hours = String(now.getHours()).padStart(2, "0");
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const seconds = String(now.getSeconds()).padStart(2, "0");
-  return `json4u-${hours}${minutes}${seconds}.${suffix.toLowerCase()}`;
+  return `${siteConfig.fileNamePrefix}-${hours}${minutes}${seconds}.${suffix.toLowerCase()}`;
 }
 
 const pathRegex = /(?:(?:file|https?|global code|[^@]+)@)?(?:file:)?((?:\/[^:/]+){2,})(?::(\d+))?(?::(\d+))?/;

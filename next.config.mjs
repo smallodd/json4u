@@ -12,7 +12,6 @@ import path from "path";
 const jiti = createJiti(fileURLToPath(import.meta.url));
 jiti("./src/lib/env");
 
-const isCN = /\.cn(:3000)?$/.test(process.env.NEXT_PUBLIC_APP_URL);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import("next").NextConfig} */
@@ -21,7 +20,8 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   poweredByHeader: false,
-  output: isCN ? "standalone" : undefined,
+  // Docker builds opt into standalone output. Vercel uses the default Next.js output.
+  output: process.env.BUILD_OUTPUT_STANDALONE === "true" ? "standalone" : undefined,
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   experimental: {
     optimizePackageImports: [

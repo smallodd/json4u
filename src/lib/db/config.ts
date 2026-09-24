@@ -46,12 +46,14 @@ export const defaultConfig: Config = {
 };
 
 let globalStore: UseStore | undefined;
+let legacyStore: UseStore | undefined;
 
 /**
  * Initializes the global store.
  */
 export function init() {
-  globalStore = createStore("json4u", "kv");
+  globalStore = createStore("json-editor", "kv");
+  legacyStore = createStore("json4u", "kv");
 }
 
 export async function safeGet(key: string) {
@@ -64,7 +66,19 @@ export async function safeGet(key: string) {
       init();
     }
 
-    return (await get(key, globalStore)) || null;
+    const currentValue = await get(key, globalStore);
+    if (currentValue) {
+      return currentValue;
+    }
+
+    // Preserve preferences for users migrating from the upstream application.
+    const legacyValue = await get(key, legacyStore);
+    if (legacyValue) {
+      await set(key, legacyValue, globalStore);
+      return legacyValue;
+    }
+
+    return null;
   } catch (e) {
     if ((e as unknown as Error).name === "InvalidStateError") {
       console.error("InvalidStateError", e);

@@ -29,7 +29,7 @@ jobs:
         run: |
           IMAGE_NAME=registry.cn-heyuan.aliyuncs.com/json4u/json4u
           docker build . \
-            --build-arg APP_URL=${{ secrets.ALIYUN_APP_URL }} \
+            --build-arg SITE_URL=${{ secrets.SITE_URL }} \
             --tag $IMAGE_NAME:${{ env.VERSION }}
           docker tag $IMAGE_NAME:${{ env.VERSION }} $IMAGE_NAME:latest
           docker push $IMAGE_NAME:latest
